@@ -1,0 +1,12 @@
+com\ifms\repository\UserRepository.class
+com\ifms\security\JwtUtil.class
+com\ifms\repository\FeedbackRepository.class
+com\ifms\model\DecisionLevel.class
+com\ifms\model\Feedback.class
+com\ifms\model\InterviewStatus.class
+com\ifms\controller\AuthController.class
+com\ifms\model\Role.class
+com\ifms\model\User.class
+com\ifms\security\SecurityConfig.class
+com\ifms\repository\InterviewRepository.class
+com\ifms\model\Interview.class
