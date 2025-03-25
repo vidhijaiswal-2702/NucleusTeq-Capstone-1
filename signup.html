@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - IFMS</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Sign Up</h2>
+        <input type="text" id="username" placeholder="Enter your name" required>
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <select id="role">
+            <option value="HR_ADMIN">HR Admin</option>
+            <option value="INTERVIEWER">Interviewer</option>
+        </select>
+        <button onclick="register()">Sign Up</button>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+        <p id="signupMessage"></p>
+    </div>
+
+    <script src="js/signup.js"></script>
+</body>
+</html>
