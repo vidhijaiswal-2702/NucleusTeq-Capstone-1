@@ -1,51 +1,46 @@
 package com.ifms.controller;
 
-import com.ifms.model.User;
-import com.ifms.repository.UserRepository;
-import com.ifms.security.JwtUtil;
+import com.ifms.entity.User;
+
+
+import com.ifms.service.AuthService;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+//Allow requests from frontend (Adjust port if needed)
+@CrossOrigin(origins = "http://127.0.0.1:5500")  
 
 @RestController
 @RequestMapping("/auth")
+
 public class AuthController {
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthService authService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody User user) {
-        // Check if email already exists
-        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-        if (existingUser.isPresent()) {
-            return ResponseEntity.badRequest().body("Email already exists!");
-        }
-        
-        // Encode password before saving
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        
-        return ResponseEntity.ok("User registered successfully!");
+    @PostMapping("/register")
+    public User register(@RequestBody User user) {
+        return authService.register(user.getUsername(), user.getPassword(), user.getRole(), user.getEmail());
     }
-
+    
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User loginRequest) {
-        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
+    public User login(@RequestBody User loginRequest) {
+        return authService.login(loginRequest.getEmail(), loginRequest.getPassword());
         
-        if (user.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
-            String token = jwtUtil.generateToken(user.get().getEmail());
-            return ResponseEntity.ok(token);
-        } else {
-            return ResponseEntity.badRequest().body("Invalid email or password");
-        }
     }
-}
+    @GetMapping("/user")
+    public Optional<User> getLoggedInUser(@RequestParam String email) {
+        return authService.getUserByEmail(email);
+    }
+    
+    @GetMapping("/all")
+    public List<User> getAllUsers() {
+        return authService.getAllUsers();
+    }
+
+    }
+

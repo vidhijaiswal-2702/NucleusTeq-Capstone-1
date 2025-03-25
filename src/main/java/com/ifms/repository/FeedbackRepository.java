@@ -1,14 +1,15 @@
 package com.ifms.repository;
 
-import com.ifms.model.Feedback;
+import com.ifms.entity.DecisionLevel;
+import com.ifms.entity.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
-    
-    // Custom query method to find feedback by interview ID
-    List<Feedback> findByInterviewId(Long interviewId);
+    Optional<Feedback> findByInterviewId(Long interviewId);
+    List<Feedback> findByDecisionLevel(DecisionLevel decisionLevel);
 }
-
