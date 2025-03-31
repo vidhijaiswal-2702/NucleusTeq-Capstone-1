@@ -1,9 +1,9 @@
 package com.ifms.entity;
 
+
 public enum Rating {
+    POOR,
     AVERAGE,
     GOOD,
-    NOT_EVALUATED,
-    POOR,
     VERY_GOOD
 }

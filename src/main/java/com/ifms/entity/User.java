@@ -20,8 +20,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)  // Ensure enum is stored as a string in DB
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     @Column(nullable = false, unique = true)
     private String email; // Ensure this field is present and not null

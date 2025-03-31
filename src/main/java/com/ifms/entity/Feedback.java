@@ -1,78 +1,39 @@
 package com.ifms.entity;
 
-import com.ifms.entity.DecisionLevel;
-import com.ifms.entity.EvaluationRound;
+
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "feedback")
+@Getter
+@Setter
 public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "interview_id", nullable = false)
-    private Interview interview;
+    private Interview interview;  // FK to Interviews table
+
+    @ManyToOne
+    @JoinColumn(name = "interviewer_id", nullable = false)
+    private User interviewer;  // FK to Users table
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "feedback_level", nullable = false)
-    private EvaluationRound feedbackLevel;
+    @Column(nullable = false)
+    private Skill skill;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "decision_level", nullable = false)
-    private DecisionLevel decisionLevel;
+    @Column(nullable = false)
+    private Rating rating;
 
-    @Column(name = "overall_comments", columnDefinition = "TEXT")
-    private String overallComments;
+    @Column(columnDefinition = "TEXT")
+    private String topicsUsed;  // Specific topics tested
 
-    public Feedback() {}
-
-    public Feedback(Interview interview, EvaluationRound feedbackLevel, DecisionLevel decisionLevel, String overallComments) {
-        this.interview = interview;
-        this.feedbackLevel = feedbackLevel;
-        this.decisionLevel = decisionLevel;
-        this.overallComments = overallComments;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Interview getInterview() {
-        return interview;
-    }
-
-    public void setInterview(Interview interview) {
-        this.interview = interview;
-    }
-
-    public EvaluationRound getFeedbackLevel() {
-        return feedbackLevel;
-    }
-
-    public void setFeedbackLevel(EvaluationRound feedbackLevel) {
-        this.feedbackLevel = feedbackLevel;
-    }
-
-    public DecisionLevel getDecisionLevel() {
-        return decisionLevel;
-    }
-
-    public void setDecisionLevel(DecisionLevel decisionLevel) {
-        this.decisionLevel = decisionLevel;
-    }
-
-    public String getOverallComments() {
-        return overallComments;
-    }
-
-    public void setOverallComments(String overallComments) {
-        this.overallComments = overallComments;
-    }
+    @Column(columnDefinition = "TEXT")
+    private String comments;  // Interviewer's feedback comments
 }

@@ -1,35 +1,31 @@
 package com.ifms.entity;
 
+import com.ifms.entity.InterviewStatus;
+import com.ifms.entity.InterviewRound;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "interviews")
 @Getter
 @Setter
-@Table(name = "interviews", uniqueConstraints = { @UniqueConstraint(columnNames = "candidateEmail") }) // Unique constraint at table level
 public class Interview {
 
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-generate ID
-	    @Column(nullable = false, unique = true)
-	    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private String candidateName;
-    
-    @Column(nullable = false, unique = true) // Ensures uniqueness and non-null
+
+    @Column(nullable = false, unique = true)
     private String candidateEmail;
 
-
-
-    @Column(nullable = false)
-    private String interviewerName;
-
-    @Column(nullable = false)
-    private String position;
+    @ManyToOne
+    @JoinColumn(name = "interviewer_id", nullable = false)
+    private User interviewer;  // FK to Users table
 
     @Column(nullable = false)
     private LocalDateTime interviewDate;
@@ -37,10 +33,8 @@ public class Interview {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private InterviewStatus status;
-    
-    @Column(nullable = true)
-    private String hrComments;  // HR's additional comments
 
-    
-    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InterviewRound round;
 }
