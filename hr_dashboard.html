@@ -8,32 +8,203 @@
 </head>
 <body>
 
-   <!-- Sidebar -->
-   <div class="sidebar" id="sidebar">
-    <h2>HR Dashboard</h2>
-    <ul>
-        <li><a href="#" id="view-interviews">📋 View Interviews</a></li>
-        <li><a href="#" id="assign-interview">📝 Assign Interview</a></li>
-        <li><a href="#" id="view-feedback">🔍 View Feedback</a></li>
-        <li><a href="#" id="schedule-round">⏭️ Schedule Rounds</a></li>
-        <li><a href="#" id="final-decision">✅ Final Decision</a></li>
-        <li><a href="#" id="delete-interview">🗑️ Delete Interview</a></li>
-    </ul>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>HR Dashboard</h2>
+
+       
+        
+        <ul>
+            <li><a href="#" onclick="showSection('all-interviews')">View All Interviews</a></li>
+            <li><a href="#" onclick="showSection('view-interviewers')">View All Interviewers</a></li> 
+            <li><a href="#" onclick="showSection('schedule-interview')">Schedule Interview</a></li>
+            <li><a href="#" onclick="showSection('update-delete-interview')">Update/Delete Interviews</a></li>
+            <li><a href="#" onclick="showSection('view-feedback')">View Candidate Feedback</a></li>
+            <li><a href="#" onclick="showSection('submit-decision')">Submit Hiring Decision</a></li>
+            <li><a href="#" onclick="showSection('view-decisions')">View Final Decisions</a></li>
+             
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>HR Dashboard</h2>
+            <div class="logout-container"><button onclick="logout()">Logout</button>
+            </div>
+            
+        </div>
+
+        <!-- View All Interviews -->
+        <div id="all-interviews" class="section active">
+            <h3>All Interviews</h3>
+            <table id="interviewsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Candidate Name</th>
+                        <th>Email</th>
+                        <th>Interviewer</th>
+                        <th>Interview Date</th>
+                        <th>Status</th>
+                        <th>Round</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic content will be added here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="view-interviewers" class="section">
+            <h2>All Registered Interviewers</h2>
+            <table id="interviewersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+
+        <!-- Schedule a New Interview -->
+        <div id="schedule-interview" class="section">
+            <h3>Schedule Interview</h3>
+            <label>Candidate Name:</label>
+            <input type="text" id="candidateName">
+            <label>Candidate Email:</label>
+            <input type="email" id="candidateEmail">
+            <label>Interviewer ID:</label>
+            <input type="number" id="interviewerId">
+            <label>Interview Date:</label>
+            <input type="datetime-local" id="interviewDate">
+            <label>Round:</label>
+            <select id="round">
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+            </select>
+            <button onclick="scheduleInterview()">Schedule</button>
+        </div>
+
+        <!-- 🔄 Update / ❌ Delete Interview Section -->
+<div id="update-delete-interview" class="section">
+    <h2>Update or Delete Interview</h2>
+    
+    <label for="updateInterviewId">Interview ID:</label>
+    <input type="number" id="updateInterviewId" required>
+
+    <label for="updateCandidateName">Candidate Name:</label>
+    <input type="text" id="updateCandidateName" required>
+
+    <label for="updateCandidateEmail">Candidate Email:</label>
+    <input type="email" id="updateCandidateEmail" required>
+
+    <label for="updateInterviewerId">Interviewer ID:</label>
+    <input type="number" id="updateInterviewerId" required>
+
+    <label for="updateInterviewerName">Interviewer Name:</label>
+    <input type="text" id="updateInterviewerName" required>
+
+    <label for="updateInterviewerEmail">Interviewer Email:</label>
+    <input type="email" id="updateInterviewerEmail" required>
+
+    <label for="updateInterviewDate">Interview Date:</label>
+    <input type="datetime-local" id="updateInterviewDate" required>
+
+    <label for="updateInterviewStatus">Interview Status:</label>
+    <select id="updateInterviewStatus">
+        <option value="SCHEDULED">Scheduled</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELLED">Cancelled</option>
+    </select>
+
+    <label for="updateInterviewRound">Interview Round:</label>
+    <select id="updateInterviewRound">
+        <option value="L1">L1</option>
+        <option value="L2">L2</option>
+    </select>
+
+    <button onclick="updateInterview()">Update Interview</button>
+    <button onclick="deleteInterview()" style="background: red; color: white;">Delete Interview</button>
 </div>
 
-<!-- Main Content -->
-<div class="main-content" id="main-content">
-    <div class="top-bar">
-        <button id="toggle-btn">☰ Menu</button>
-        <h1>Welcome, HR Manager</h1>
-    </div>
-    <div id="content-area">
-        <p>Select an option from the sidebar to manage interviews.</p>
-    </div>
-</div>
 
+        <!-- SUBMIT FINAL DECISION-->
+        <div id="submit-decision" class="section">
+            <h2>Submit Hiring Decision</h2>
+        
+            <label for="decisionInterviewId">Interview ID:</label>
+            <input type="number" id="decisionInterviewId">
+        
+            <label for="decisionHrId">HR ID:</label>
+            <input type="number" id="decisionHrId">
+        
+            <label for="decisionStatus">Final Status:</label>
+            <select id="decisionStatus">
+                <option value="HIRED">HIRED</option>
+                <option value="REJECTED">REJECTED</option>
+                <option value="NEXT_ROUND">ON HOLD/NEXT ROUND</option>
+            </select>
+        
+            <label for="decisionComments">Comments:</label>
+            <textarea id="decisionComments"></textarea>
+        
+            <button onclick="submitFinalDecision()">Submit Decision</button>
+        </div>
+        
 
+        <!-- View Candidate Feedback -->
+        <div id="view-feedback" class="section">
+            <h3>View Candidate Feedback</h3>
+            <label>Interview ID:</label>
+            <input type="number" id="feedbackInterviewId">
+            <button onclick="viewFeedback()">View Feedback</button>
+            <div id="feedbackResult"></div>
+        </div>
+
+        <!-- Submit Final Hiring Decision -->
+        <div id="submit-decision" class="section">
+            <h3>Submit Final Decision</h3>
+            <label>Interview ID:</label>
+            <input type="number" id="decisionInterviewId">
+            <label>HR ID:</label>
+            <input type="number" id="hrId">
+            <label>Final Status:</label>
+            <select id="finalDecision">
+                <option value="HIRED">Hired</option>
+                <option value="REJECTED">Rejected</option>
+            </select>
+            <label>Comments:</label>
+            <textarea id="decisionComments"></textarea>
+            <button onclick="submitFinalDecision()">Submit Decision</button>
+        </div>
+
+        <!-- View All Final Decisions -->
+        <div id="view-decisions" class="section">
+            <h3>Final Hiring Decisions</h3>
+            <table id="decisionsTable">
+                <thead>
+                    <tr>
+                        <th>Interview ID</th>
+                        <th>HR ID</th>
+                        <th>Status</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic content will be added here -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 
     <script src="js/hr_dashboard.js"></script>
 </body>
 </html>
+
+

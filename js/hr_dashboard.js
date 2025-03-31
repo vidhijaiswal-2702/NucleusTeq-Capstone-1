@@ -1,103 +1,236 @@
-document.getElementById('toggle-btn').addEventListener('click', function () {
-    let sidebar = document.getElementById('sidebar');
-    let mainContent = document.getElementById('main-content');
+document.addEventListener("DOMContentLoaded", function () {
+    showSection("all-interviews"); // Default section
+    fetchAllInterviews();
+    fetchFinalDecisions();
+});
 
-    if (sidebar.style.width === '0px') {
-        sidebar.style.width = '250px';
-        mainContent.style.marginLeft = '260px';
+// Function to show selected section
+function showSection(sectionId) {
+    document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
+
+    let activeSection = document.getElementById(sectionId);
+    if (activeSection) { // ✅ Check if the element exists
+        activeSection.classList.add("active");
     } else {
-        sidebar.style.width = '0px';
-        mainContent.style.marginLeft = '0';
+        console.error(`Section with ID '${sectionId}' not found!`);
+        return;
     }
-});
 
-// Backend API Integration
-const baseUrl = 'http://localhost:8080/api/hr';
-
-// Fetch all interviews
-document.getElementById('view-interviews').addEventListener('click', async () => {
-    let response = await fetch(`${baseUrl}/interviews`);
-    let data = await response.json();
-    displayData(data, 'All Interviews');
-});
-
-// Assign an interview
-document.getElementById('assign-interview').addEventListener('click', async () => {
-    let interviewData = {
-        candidateEmail: prompt("Enter Candidate Email:"),
-        interviewerName: prompt("Enter Interviewer Name:"),
-        position: prompt("Enter Position:"),
-        interviewDate: prompt("Enter Interview Date (YYYY-MM-DD HH:mm):")
-    };
-
-    let response = await fetch(`${baseUrl}/assign-interview`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(interviewData)
-    });
-
-    let result = await response.text();
-    displayMessage(result, 'Assign Interview');
-});
-
-// View feedback
-document.getElementById('view-feedback').addEventListener('click', async () => {
-    let interviewId = prompt("Enter Interview ID:");
-    let response = await fetch(`${baseUrl}/feedback/${interviewId}`);
-    let data = await response.json();
-    displayData(data, 'Interview Feedback');
-});
-
-// Schedule further rounds
-document.getElementById('schedule-round').addEventListener('click', async () => {
-    let interviewId = prompt("Enter Interview ID:");
-    let scheduleData = { nextRoundDate: prompt("Enter Next Round Date (YYYY-MM-DD HH:mm):") };
-
-    let response = await fetch(`${baseUrl}/schedule-round/${interviewId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(scheduleData)
-    });
-
-    let result = await response.text();
-    displayMessage(result, 'Schedule Further Rounds');
-});
-
-// Make final decision
-document.getElementById('final-decision').addEventListener('click', async () => {
-    let decisionData = {
-        interviewId: prompt("Enter Interview ID:"),
-        finalDecision: prompt("Enter Decision (Hired/Rejected):"),
-        remarks: prompt("Enter Remarks:")
-    };
-
-    let response = await fetch(`${baseUrl}/final-decision`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(decisionData)
-    });
-
-    let result = await response.text();
-    displayMessage(result, 'Final Decision');
-});
-
-// Delete interview
-document.getElementById('delete-interview').addEventListener('click', async () => {
-    let interviewId = prompt("Enter Interview ID to delete:");
-
-    let response = await fetch(`${baseUrl}/delete-interview/${interviewId}`, {
-        method: 'DELETE'
-    });
-
-    let result = await response.text();
-    displayMessage(result, 'Delete Interview');
-});
-
-// Helper Functions
-function displayData(data, title) {
-    document.getElementById('content-area').innerHTML = `<h2>${title}</h2><pre>${JSON.stringify(data, null, 2)}</pre>`;
+    if (sectionId === "all-interviews") fetchAllInterviews();
+    if (sectionId === "view-decisions") fetchFinalDecisions();
 }
 
-function displayMessage(message, title) {
-    document.getElementById('content-area').innerHTML = `<h2>${title}</h2><p>${message}</p>`;
+
+// 1️⃣ Fetch All Interviews
+function fetchAllInterviews() {
+    fetch("http://localhost:8080/api/interviews/all")
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.querySelector("#interviewsTable tbody");
+            tableBody.innerHTML = "";
+            data.forEach(interview => {
+                let row = `
+                    <tr>
+                        <td>${interview.id}</td>
+                        <td>${interview.candidateName}</td>
+                        <td>${interview.candidateEmail}</td>
+                        <td>${interview.interviewer.username}</td>
+                        <td>${interview.interviewDate}</td>
+                        <td>${interview.status}</td>
+                        <td>${interview.round}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => console.error("Error fetching interviews:", error));
+}
+// Fetch and display all registered interviewers
+function fetchAllInterviewers() {
+    fetch("http://localhost:8080/api/users/interviewers")
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.querySelector("#interviewersTable tbody");
+            tableBody.innerHTML = "";
+            data.forEach(interviewer => {
+                let row = `
+                    <tr>
+                        <td>${interviewer.id}</td>
+                        <td>${interviewer.username}</td>
+                        <td>${interviewer.email}</td>
+                        <td>${interviewer.role}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => console.error("Error fetching interviewers:", error));
+}
+
+// Call function when HR clicks on "View All Interviewers"
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector("[onclick=\"showSection('view-interviewers')\"]").addEventListener("click", fetchAllInterviewers);
+});
+
+
+// 2️⃣ Schedule a New Interview
+function scheduleInterview() {
+    let interviewData = {
+        candidateName: document.getElementById("candidateName").value,
+        candidateEmail: document.getElementById("candidateEmail").value,
+        interviewer: { id: parseInt(document.getElementById("interviewerId").value) },
+        interviewDate: document.getElementById("interviewDate").value,
+        round: document.getElementById("round").value,
+        status: "SCHEDULED"
+    };
+
+    fetch("http://localhost:8080/api/interviews/schedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(interviewData)
+    })
+    .then(response => response.json())
+    .then(() => {
+        alert("Interview Scheduled Successfully!");
+        fetchAllInterviews();
+    })
+    .catch(error => console.error("Error scheduling interview:", error));
+}
+
+// 3️⃣ Update an Interview (Placeholder function)
+function updateInterview() {
+    let interviewId = document.getElementById("updateInterviewId").value;
+    
+    let updatedInterviewData = {
+        id: parseInt(interviewId),
+        candidateName: document.getElementById("updateCandidateName").value,
+        candidateEmail: document.getElementById("updateCandidateEmail").value,
+        interviewer: {
+            id: parseInt(document.getElementById("updateInterviewerId").value),
+            username: document.getElementById("updateInterviewerName").value,
+            email: document.getElementById("updateInterviewerEmail").value,
+            role: "INTERVIEWER"
+        },
+        interviewDate: document.getElementById("updateInterviewDate").value,
+        status: document.getElementById("updateInterviewStatus").value,
+        round: document.getElementById("updateInterviewRound").value
+    };
+
+    fetch(`http://localhost:8080/api/interviews/update/${interviewId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedInterviewData)
+    })
+    .then(() => {
+        alert("Interview Updated Successfully!");
+        fetchAllInterviews();
+    })
+    .catch(error => console.error("Error updating interview:", error));
+}
+
+// 4️⃣ Delete an Interview
+function deleteInterview() {
+    let interviewId = document.getElementById("updateInterviewId").value;
+
+    fetch(`http://localhost:8080/api/interviews/delete/${interviewId}`, {
+        method: "DELETE"
+    })
+    .then(() => {
+        alert("Interview Deleted Successfully!");
+        fetchAllInterviews();
+    })
+    .catch(error => console.error("Error deleting interview:", error));
+}
+
+// 5️⃣ View Candidate Feedback
+function viewFeedback() {
+    let interviewId = document.getElementById("feedbackInterviewId").value;
+
+    fetch(`http://localhost:8080/api/feedback/interview/${interviewId}`)
+        .then(response => response.json())
+        .then(feedbackArray => {
+            if (!Array.isArray(feedbackArray) || feedbackArray.length === 0) {
+                document.getElementById("feedbackResult").innerHTML = `<p>No feedback found.</p>`;
+                return;
+            }
+
+            let feedbackHtml = feedbackArray.map(feedback => `
+                <p><strong>Skill:</strong> ${feedback.skill}</p>
+                <p><strong>Rating:</strong> ${feedback.rating}</p>
+                <p><strong>Topics Used:</strong> ${feedback.topicsUsed}</p>
+                <p><strong>Comments:</strong> ${feedback.comments}</p>
+                <hr>
+            `).join('');
+
+            document.getElementById("feedbackResult").innerHTML = feedbackHtml;
+        })
+        .catch(error => console.error("Error fetching feedback:", error));
+}
+
+// 6️⃣ Submit Final Hiring Decision
+function submitFinalDecision() {
+    // ✅ Retrieve HR ID from sessionStorage
+    let hrId = sessionStorage.getItem("hrId");
+
+    if (!hrId) {
+        console.error("HR ID is missing or invalid:", hrId);
+        alert("HR ID is missing. Please log in again.");
+        return;
+    }
+
+    let decisionData = {
+        interviewId: parseInt(document.getElementById("decisionInterviewId").value),
+        hrId: parseInt(hrId), // ✅ Ensure hrId is a valid number
+        finalStatus: document.getElementById("finalDecision").value,
+        comments: document.getElementById("decisionComments").value
+    };
+
+    console.log("Submitting Decision:", decisionData); // Debugging output
+
+    fetch("http://localhost:8080/api/decisions/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(decisionData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw err });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert("Final Decision Submitted Successfully!");
+        fetchFinalDecisions();
+    })
+    .catch(error => console.error("Error submitting decision:", error));
+}
+
+// 7️⃣ Fetch All Final Decisions
+function fetchFinalDecisions() {
+    fetch("http://localhost:8080/api/decisions/all")
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.querySelector("#decisionsTable tbody");
+            tableBody.innerHTML = "";
+            data.forEach(decision => {
+                let row = `
+                    <tr>
+                        <td>${decision.interview.id}</td>  <!-- Fix interview ID -->
+                        <td>${decision.hr.id}</td>         <!-- Fix HR ID -->
+                        <td>${decision.finalStatus}</td>
+                        <td>${decision.comments}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => console.error("Error fetching decisions:", error));
+}
+
+
+
+// Logout Function
+function logout() {
+    alert("Logging out...");
+    window.location.href = "login.html"; // Redirect to login page
 }

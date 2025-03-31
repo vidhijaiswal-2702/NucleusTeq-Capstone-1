@@ -29,6 +29,16 @@ async function login() {
         const user = await response.json();
         localStorage.setItem("user", JSON.stringify(user)); // Store user in local storage
 
+        // ✅ Store interviewer email in sessionStorage
+        if (user.role === "INTERVIEWER") {
+            sessionStorage.setItem("interviewerEmail", user.email);
+        }
+
+        // ✅ Store HR ID in sessionStorage
+        if (user.role === "HR_ADMIN") {
+            sessionStorage.setItem("hrId", user.id);  // Store HR ID
+        }
+
         // Role-based redirection
         if (user.role === "HR_ADMIN") {
             window.location.href = "hr_dashboard.html";

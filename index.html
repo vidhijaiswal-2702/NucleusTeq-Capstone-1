@@ -9,15 +9,22 @@
 <body>
     <div class="container">
         <h2>Welcome to IFMS</h2>
-        <p>Dashboard - You are logged in!</p>
-        <button onclick="logout()">Logout</button>
+        <p>Dashboard - Welcome To Interview Feedback Management System</p>
+        
+        <!-- ✅ Removed the login form -->
+        <button onclick="redirectToLogin()">Login</button>
+        <button onclick="redirectToSignup()">Signup</button>
     </div>
 
     <script>
-        function logout() {
-            localStorage.removeItem("user");
-            window.location.href = "login.html";
+        function redirectToLogin() {
+            window.location.href = "login.html"; 
+        }
+
+        function redirectToSignup() {
+            window.location.href = "signup.html"; 
         }
     </script>
 </body>
 </html>
+
