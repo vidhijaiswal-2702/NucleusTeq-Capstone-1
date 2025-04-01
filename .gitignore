@@ -1,0 +1,3 @@
+# Ignore application.properties in resources folder
+
+src/main/resources/application.properties

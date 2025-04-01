@@ -12,5 +12,10 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByInterview(Interview interview);
     List<Feedback> findByInterviewer(User interviewer);
     List<Feedback> findByInterviewer_Email(String email);
+    
+    
+        void deleteByInterviewId(Long interviewId);
+    }
 
-}
+
+

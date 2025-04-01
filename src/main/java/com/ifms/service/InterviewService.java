@@ -4,8 +4,13 @@ import com.ifms.entity.Interview;
 import com.ifms.entity.User;
 import com.ifms.exception.ResourceNotFoundException;
 import com.ifms.entity.InterviewStatus;
+import com.ifms.repository.DecisionRepository;
+import com.ifms.repository.FeedbackRepository;
 import com.ifms.repository.InterviewRepository;
 import com.ifms.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +20,14 @@ import java.util.Optional;
 public class InterviewService {
     private final InterviewRepository interviewRepository;
     private final UserRepository userRepository;
+    private final DecisionRepository decisionRepository;
+    private final FeedbackRepository feedbackRepository;
 
-    public InterviewService(InterviewRepository interviewRepository, UserRepository userRepository) {
+    public InterviewService(InterviewRepository interviewRepository, UserRepository userRepository,DecisionRepository decisionRepository, FeedbackRepository feedbackRepository ) {
         this.interviewRepository = interviewRepository;
         this.userRepository = userRepository;
+        this.decisionRepository = decisionRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
     /**
@@ -50,9 +59,23 @@ public class InterviewService {
     /**
      * HR deletes an interview.
      */
-    public void deleteInterview(Long interviewId) {
-        interviewRepository.deleteById(interviewId);
+    @Transactional
+    public void deleteInterview(Long id) {
+        if (interviewRepository.existsById(id)) {
+            // Delete all feedback related to this interview
+            feedbackRepository.deleteByInterviewId(id);
+            
+            // Delete all decisions related to this interview
+            decisionRepository.deleteByInterviewId(id);
+
+            // Now delete the interview
+            interviewRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Interview not found with ID: " + id);
+        }
     }
+
+
 
     /**
      * HR fetches all scheduled interviews.
