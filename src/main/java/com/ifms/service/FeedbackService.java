@@ -33,7 +33,7 @@ public class FeedbackService {
      */
     public List<Feedback> submitFeedback(int interviewId, List<Map<String, Object>> feedbackList) {
         System.out.println("Processing feedback for interview ID: " + interviewId);
-        System.out.println("Received feedbackList: " + feedbackList);  // 🔹 Yeh print karega received data
+        System.out.println("Received feedbackList: " + feedbackList);  // 🔹 Print received data
 
         // ✅ Fetch Interview from DB
         Interview interview = interviewRepository.findById((long) interviewId)
@@ -71,6 +71,13 @@ public class FeedbackService {
                 feedback.setTopicsUsed(feedbackEntry.get("topicsUsed").toString());
                 feedback.setComments(feedbackEntry.get("comments").toString());
 
+                // ✅ Store final decision if provided
+                if (feedbackEntry.containsKey("finalDecision")) {
+                    feedback.setFinalDecision(feedbackEntry.get("finalDecision").toString());
+                } else {
+                    feedback.setFinalDecision("Pending"); // Default decision
+                }
+
                 // ✅ Save feedback
                 savedFeedbacks.add(feedbackRepository.save(feedback));
 
@@ -78,7 +85,7 @@ public class FeedbackService {
 
             } catch (Exception e) {
                 System.out.println("Error processing feedback entry: " + feedbackEntry);
-                e.printStackTrace();  // 🔹 Yeh poora error stack trace print karega
+                e.printStackTrace();  // 🔹 Print full error stack trace
                 throw new RuntimeException("Invalid feedback data format", e);
             }
         }

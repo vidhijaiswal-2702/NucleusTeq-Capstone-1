@@ -47,19 +47,26 @@ public class DecisionService {
         Decision decision = new Decision();
         decision.setInterview(interview);
         decision.setHr(hr_admin);
-        
+
         try {
-            decision.setFinalStatus(FinalStatus.valueOf(requestData.get("finalStatus").toString().toUpperCase()));
+            String finalStatusStr = requestData.get("finalStatus").toString().toUpperCase();
+            System.out.println("Attempting to convert to FinalStatus: " + finalStatusStr); // Log before conversion
+
+            FinalStatus finalStatus = FinalStatus.valueOf(finalStatusStr);
+            decision.setFinalStatus(finalStatus);
+
+            System.out.println("FinalStatus set to: " + finalStatus); // Log after conversion
+
         } catch (IllegalArgumentException e) {
+            System.err.println("Error converting FinalStatus: " + e.getMessage()); // Log exception message
             throw new RuntimeException("Invalid FinalStatus value: " + requestData.get("finalStatus"));
         }
 
         decision.setComments(requestData.get("comments").toString());
 
-        System.out.println("Saving Decision: " + decision);
+        System.out.println("Decision object before saving: " + decision); // Log before saving
         return decisionRepository.save(decision);
     }
-
 
     /**
      * Fetch all hiring decisions (For HR review).

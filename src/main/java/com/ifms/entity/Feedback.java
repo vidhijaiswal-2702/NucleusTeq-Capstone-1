@@ -36,4 +36,15 @@ public class Feedback {
 
     @Column(columnDefinition = "TEXT")
     private String comments;  // Interviewer's feedback comments
+    
+    @Column(nullable = true) 
+    private String finalDecision;  // Store L1/L2 decision
+
+    public String getFinalDecision() {
+        return finalDecision;
+    }
+
+    public void setFinalDecision(String finalDecision) {
+        this.finalDecision = finalDecision;
+    }
 }

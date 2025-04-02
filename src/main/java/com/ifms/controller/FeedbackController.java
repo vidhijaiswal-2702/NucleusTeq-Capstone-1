@@ -70,6 +70,13 @@ public class FeedbackController {
                 feedback.setTopicsUsed(entry.get("topicsUsed").toString());
                 feedback.setComments(entry.get("comments").toString());
 
+                // ✅ 7. Store final decision if provided
+                if (entry.containsKey("finalDecision")) {
+                    feedback.setFinalDecision(entry.get("finalDecision").toString());
+                } else {
+                    feedback.setFinalDecision("Pending"); // Default decision
+                }
+
                 feedbackRepository.save(feedback); // ✅ Save feedback
             }
 
