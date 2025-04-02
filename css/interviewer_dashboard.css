@@ -1,0 +1,173 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    background-color: #f4f4f4;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background: #222;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: 0.3s;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    transition: 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: gold;
+    color: black;
+    border-radius: 5px;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+    flex: 1;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #222;
+    color: white;
+    padding: 10px;
+}
+
+button {
+    background: gold;
+    color: black;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+button:hover {
+    background: black;
+    color: gold;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: gold;
+    color: black;
+}
+
+/* Sections */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+/* Center the form with proper spacing */
+#submit-feedback {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    margin: auto;
+}
+
+/* Stack interview ID fields properly */
+#feedback-form label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#feedback-form input {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    margin-bottom: 15px;
+}
+
+/* Make the feedback section horizontal */
+.feedback-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+/* Properly space each feedback row */
+.feedback-section label {
+    font-size: 16px;
+    font-weight: bold;
+    width: 120px; /* Label width */
+}
+
+.feedback-section select,
+.feedback-section input {
+    padding: 8px;
+    font-size: 16px;
+    width: 200px;
+    margin: 0 5px;
+}
+
+/* Ensure fields take full width */
+.feedback-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
