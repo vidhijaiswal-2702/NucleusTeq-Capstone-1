@@ -29,7 +29,8 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="top-bar">
-            <h2>HR Dashboard</h2>
+            <h2>Welcome HR Admin,</h2>
+            <div id="userDetails"></div>
             <div class="logout-container"><button onclick="logout()">Logout</button>
             </div>
             
@@ -133,28 +134,6 @@
 </div>
 
 
-        <!-- SUBMIT FINAL DECISION-->
-        <div id="submit-decision" class="section">
-            <h2>Submit Hiring Decision</h2>
-        
-            <label for="decisionInterviewId">Interview ID:</label>
-            <input type="number" id="decisionInterviewId">
-        
-            <label for="decisionHrId">HR ID:</label>
-            <input type="number" id="decisionHrId">
-        
-            <label for="decisionStatus">Final Status:</label>
-            <select id="decisionStatus">
-                <option value="HIRED">HIRED</option>
-                <option value="REJECTED">REJECTED</option>
-                <option value="NEXT_ROUND">ON HOLD/NEXT ROUND</option>
-            </select>
-        
-            <label for="decisionComments">Comments:</label>
-            <textarea id="decisionComments"></textarea>
-        
-            <button onclick="submitFinalDecision()">Submit Decision</button>
-        </div>
         
 
         <!-- View Candidate Feedback -->
@@ -173,10 +152,11 @@
             <input type="number" id="decisionInterviewId">
             <label>HR ID:</label>
             <input type="number" id="hrId">
-            <label>Final Status:</label>
+            <label for = "finalDecision">Final Status:</label>
             <select id="finalDecision">
                 <option value="HIRED">Hired</option>
                 <option value="REJECTED">Rejected</option>
+                <option value="NEXT ROUND">Next Round</option>
             </select>
             <label>Comments:</label>
             <textarea id="decisionComments"></textarea>

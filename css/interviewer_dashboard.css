@@ -103,28 +103,71 @@ th {
 .section.active {
     display: block;
 }
-.card-container {
+/* Center the form with proper spacing */
+#submit-feedback {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    margin: auto;
+}
+
+/* Stack interview ID fields properly */
+#feedback-form label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#feedback-form input {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    margin-bottom: 15px;
+}
+
+/* Make the feedback section horizontal */
+.feedback-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+/* Properly space each feedback row */
+.feedback-section label {
+    font-size: 16px;
+    font-weight: bold;
+    width: 120px; /* Label width */
+}
+
+.feedback-section select,
+.feedback-section input {
+    padding: 8px;
+    font-size: 16px;
+    width: 200px;
+    margin: 0 5px;
+}
+
+/* Ensure fields take full width */
+.feedback-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
+    justify-content: space-between;
+    width: 100%;
 }
 
-.card {
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: white;
-    transition: all 0.3s ease;
-}
 
-.card:hover {
-    background-color: #f1f1f1;
-}
 
-.card.selected {
-    border-color: #000;
-    background-color: #000;
-    color: white;
-}
+
+
+
+
+
+
+
+
+
+

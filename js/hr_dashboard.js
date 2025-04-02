@@ -2,6 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
     showSection("all-interviews"); // Default section
     fetchAllInterviews();
     fetchFinalDecisions();
+
+     // ✅ Display user details
+     const user = JSON.parse(localStorage.getItem("user"));
+     if (user) {
+         document.getElementById("userDetails").innerHTML = 
+             `<p><strong>Email:</strong> ${user.email}</p>
+              <p><strong>ID:</strong> ${user.id}</p>`;
+     }
 });
 
 // Function to show selected section
@@ -154,15 +162,24 @@ function viewFeedback() {
                 return;
             }
 
-            let feedbackHtml = feedbackArray.map(feedback => `
-                <p><strong>Skill:</strong> ${feedback.skill}</p>
-                <p><strong>Rating:</strong> ${feedback.rating}</p>
-                <p><strong>Topics Used:</strong> ${feedback.topicsUsed}</p>
-                <p><strong>Comments:</strong> ${feedback.comments}</p>
-                <hr>
-            `).join('');
+            let finalDecisionDisplay = ''; // To store the final decision display
+            let feedbackHtml = feedbackArray.map(feedback => {
+                // Get final decision from the first feedback entry
+                if (finalDecisionDisplay === '' && feedback.finalDecision) {
+                    finalDecisionDisplay = `<p style="font-size: 1.5em; font-weight: bold; color: #007bff;"><strong>Final Decision:</strong> ${feedback.finalDecision}</p>`; // Added styling
+                }
 
-            document.getElementById("feedbackResult").innerHTML = feedbackHtml;
+                return `
+                    <p><strong>Skill:</strong> ${feedback.skill}</p>
+                    <p><strong>Rating:</strong> ${feedback.rating}</p>
+                    <p><strong>Topics Used:</strong> ${feedback.topicsUsed}</p>
+                    <p><strong>Comments:</strong> ${feedback.comments}</p>
+                    <hr>
+                `;
+            }).join('');
+
+            // Combine final decision (if any) and feedback content
+            document.getElementById("feedbackResult").innerHTML = finalDecisionDisplay + feedbackHtml;
         })
         .catch(error => console.error("Error fetching feedback:", error));
 }
@@ -180,12 +197,12 @@ function submitFinalDecision() {
 
     let decisionData = {
         interviewId: parseInt(document.getElementById("decisionInterviewId").value),
-        hrId: parseInt(hrId), // ✅ Ensure hrId is a valid number
-        finalStatus: document.getElementById("finalDecision").value,
+        hrId: parseInt(hrId),
+        finalStatus: document.getElementById("finalDecision").value.toUpperCase(), // Corrected line
         comments: document.getElementById("decisionComments").value
     };
 
-    console.log("Submitting Decision:", decisionData); // Debugging output
+    console.log("Submitting Decision:", decisionData);
 
     fetch("http://localhost:8080/api/decisions/submit", {
         method: "POST",
@@ -204,7 +221,6 @@ function submitFinalDecision() {
     })
     .catch(error => console.error("Error submitting decision:", error));
 }
-
 // 7️⃣ Fetch All Final Decisions
 function fetchFinalDecisions() {
     fetch("http://localhost:8080/api/decisions/all")

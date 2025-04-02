@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interviewer Dashboard</title>
     <link rel="stylesheet" href="css/interviewer_dashboard.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
 </head>
 <body>
 
@@ -15,15 +17,25 @@
             <li><a href="#" onclick="showSection('assigned-interviews')">View Assigned Interviews</a></li>
             <li><a href="#" onclick="showSection('submit-feedback')">Submit Feedback</a></li>
             <li><a href="#" onclick="showSection('view-feedback')">View Submitted Feedback</a></li>
+            <li><a href="#" onclick="showSection('calendar')">Calendar View</a></li>
+            
+           
         </ul>
     </div>
+   
 
     <!-- Main Content -->
+    
     <div class="main-content">
         <div class="top-bar">
             <h1>Welcome, Interviewer</h1>
+            <div id="userDetails"></div> <!-- ✅ User ID & Email will be displayed here -->
+
             <button onclick="logout()">Logout</button>
         </div>
+
+        <div id="calendar" style="margin-top: 20px;"></div>
+       
 
         <!-- Section: View Assigned Interviews -->
         <div id="assigned-interviews" class="section active">
@@ -53,6 +65,8 @@
         <input type="number" id="interviewId" required><br>
         <label>Interviewer ID:</label>
         <input type = "number" id="interviewerId" required> <br>
+        <label>Final Decision:</label>
+        <input type="text" id="finalDecision"><br>  
     
         <h3>Feedback for Each Skill:</h3>
     
@@ -135,6 +149,7 @@
                         <th>Rating</th>
                         <th>Topics Used</th>
                         <th>Comments</th>
+                        <th>Final Decision</th>
                     </tr>
                 </thead>
                 <tbody>
